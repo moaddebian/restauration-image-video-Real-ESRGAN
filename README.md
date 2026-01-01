@@ -1,4 +1,4 @@
-# 🖼️ Projet de Restauration d'Images avec Real-ESRGAN
+# 🖼️ Projet de Restauration d'Images et Vidéos avec Real-ESRGAN
 
 Un projet Python complet pour restaurer et améliorer la qualité d'images et de vidéos en utilisant les modèles Real-ESRGAN pré-entraînés.
 
