@@ -1,0 +1,35 @@
+# Dépendances principales pour le projet de restauration d'images
+# Python 3.8+ requis
+
+# Deep Learning
+torch>=2.0.0
+torchvision>=0.15.0
+
+# Traitement d'images
+opencv-python>=4.8.0
+Pillow>=10.0.0
+numpy>=1.24.0
+
+# Visualisation
+matplotlib>=3.7.0
+
+# Métriques et évaluation
+scikit-image>=0.21.0
+scikit-learn>=1.3.0
+
+# Utilitaires
+tqdm>=4.66.0
+
+# Real-ESRGAN et BasicSR
+# Ces packages doivent être installés depuis les repositories GitHub
+
+#
+# Installation de Real-ESRGAN:
+# git clone https://github.com/xinntao/Real-ESRGAN.git
+# cd Real-ESRGAN
+# pip install -e .
+# cd ..
+#
+# Note: basicsr_repo est déjà dans le projet, vous pouvez installer depuis là:
+# pip install -e basicsr_repo
+

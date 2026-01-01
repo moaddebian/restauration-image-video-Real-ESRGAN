@@ -1,0 +1,22 @@
+{
+  "include": [
+    "src",
+    "basicsr_repo"
+  ],
+  "exclude": [
+    "**/__pycache__",
+    "**/node_modules",
+    "venv"
+  ],
+  "executionEnvironments": [
+    {
+      "root": ".",
+      "pythonVersion": "3.13",
+      "pythonPlatform": "Windows",
+      "extraPaths": [
+        "basicsr_repo"
+      ]
+    }
+  ]
+}
+

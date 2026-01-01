@@ -1,0 +1,3 @@
+# Ce fichier permet de garder le dossier models/ dans Git
+# Les fichiers .pth (modèles) sont ignorés mais le dossier est conservé
+

@@ -1,0 +1,76 @@
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+build/
+develop-eggs/
+dist/
+downloads/
+eggs/
+.eggs/
+lib/
+lib64/
+parts/
+sdist/
+var/
+wheels/
+*.egg-info/
+.installed.cfg
+*.egg
+
+# Environnements virtuels
+venv/
+env/
+ENV/
+env.bak/
+venv.bak/
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+.DS_Store
+
+# Modèles (trop volumineux pour Git)
+models/*.pth
+models/*.partial
+!models/.gitkeep
+
+# Données (optionnel - décommentez si vous ne voulez pas commit les données)
+# data/input/*
+# data/output/*
+# data/preprocessed/*
+# data/comparaison/*
+# !data/input/.gitkeep
+# !data/output/.gitkeep
+
+# Fichiers temporaires
+*.tmp
+*.log
+*.cache
+
+# Fichiers de comparaison générés
+comparison_result.png
+*.png.partial
+
+# Jupyter Notebook
+.ipynb_checkpoints
+
+# PyCharm
+.idea/
+
+# VS Code
+.vscode/
+
+# macOS
+.DS_Store
+
+# Windows
+Thumbs.db
+ehthumbs.db
+Desktop.ini
+
