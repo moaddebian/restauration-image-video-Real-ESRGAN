@@ -1,334 +1,258 @@
-# 🖼️ Projet de Restauration d'Images et Vidéos avec Real-ESRGAN
+# 🎨 Application de Restauration d'Images
 
-Un projet Python complet pour restaurer et améliorer la qualité d'images et de vidéos en utilisant les modèles Real-ESRGAN pré-entraînés.
-
-## 📋 Table des matières
-
-- [Description](#description)
-- [Fonctionnalités](#fonctionnalités)
-- [Installation](#installation)
-- [Utilisation](#utilisation)
-- [Structure du projet](#structure-du-projet)
-- [Modèles disponibles](#modèles-disponibles)
-- [Exemples](#exemples)
-- [Dépendances](#dépendances)
-- [Contributions](#contributions)
-- [Licence](#licence)
-
-## 🎯 Description
-
-Ce projet permet de restaurer et d'améliorer la qualité d'images et de vidéos en utilisant l'intelligence artificielle. Il utilise les modèles Real-ESRGAN pour :
-
-- **Agrandir les images** jusqu'à 4x leur taille originale
-- **Améliorer la qualité** en réduisant le bruit et en améliorant les détails
-- **Restaurer les images anciennes** ou de faible qualité
-- **Traiter les vidéos** frame par frame
-- **Comparer visuellement** les résultats avant/après
+Application web complète pour restaurer et améliorer la qualité d'images en utilisant Real-ESRGAN avec une interface moderne et une API REST.
 
 ## ✨ Fonctionnalités
 
-### 🖼️ Restauration d'images
-- Support de multiples formats (JPG, PNG, JPEG, BMP)
-- Choix interactif du modèle selon le type d'image
-- Traitement par lot (toutes les images d'un dossier)
-- Gestion automatique de la mémoire (mode tile)
+- 🌐 **Interface Web Moderne** : Interface utilisateur intuitive et responsive
+- 🔌 **API REST** : API complète pour intégration mobile/web
+- 🚀 **Support GPU** : Détection automatique et utilisation du GPU (CUDA)
+- 📸 **Multi-modèles** : Support de 4 modèles différents (général, anime, x2, x4)
+- 📱 **Responsive** : Compatible mobile, tablette et desktop
+- ⚡ **Temps réel** : Feedback en temps réel pendant le traitement
 
-### 🎬 Restauration de vidéos
-- Support de multiples formats vidéo (MP4, AVI, MOV, MKV, etc.)
-- Traitement frame par frame
-- Suivi de progression en temps réel
-- Préservation du framerate original
-
-### 📊 Comparaison et évaluation
-- Comparaison visuelle avant/après
-- Calcul de métriques (PSNR, SSIM, MSE)
-- Génération de rapports d'évaluation
-- Visualisation des résultats
-
-### 🔧 Prétraitement
-- Validation des images
-- Redimensionnement automatique
-- Normalisation des valeurs
-- Extraction de frames vidéo
-
-## 🚀 Installation
+## 🛠️ Installation
 
 ### Prérequis
 
-- Python 3.8 ou supérieur
-- pip (gestionnaire de packages Python)
-- Git (pour cloner le repository)
+- Python 3.8+
+- GPU NVIDIA avec CUDA (optionnel mais recommandé)
+- Pilotes NVIDIA à jour
 
 ### Étapes d'installation
 
 1. **Cloner le repository**
    ```bash
-   git clone https://github.com/moaddebian/restauration-image-Real-ESRGAN.git
+   git clone <votre-repo>
    cd restauration-image
    ```
 
-2. **Créer un environnement virtuel (recommandé)**
+2. **Créer un environnement virtuel**
    ```bash
    python -m venv venv
-   
-   # Sur Windows
+   # Windows
    venv\Scripts\activate
-   
-   # Sur Linux/Mac
+   # Linux/Mac
    source venv/bin/activate
    ```
 
-3. **Installer les dépendances de base**
+3. **Installer les dépendances**
    ```bash
    pip install -r requirements.txt
    ```
 
-4. **Installer BasicSR et Real-ESRGAN**
-   
-   Le package BasicSR est déjà inclus dans le projet dans le dossier `basicsr_repo` :
-   
+4. **Installer Real-ESRGAN et BasicSR**
    ```bash
+   # Installer BasicSR
    pip install -e basicsr_repo
-   ```
    
-   **Note** : Real-ESRGAN doit être installé séparément :
+   # Installer Real-ESRGAN (si nécessaire)
+   # git clone https://github.com/xinntao/Real-ESRGAN.git
+   # cd Real-ESRGAN
+   # pip install -e .
+   ```
+
+5. **Installer PyTorch avec CUDA** (pour support GPU)
    ```bash
-   git clone https://github.com/xinntao/Real-ESRGAN.git
-   cd Real-ESRGAN
-   pip install -e .
-   cd ..
+   # CUDA 11.8 (recommandé)
+   pip install torch torchvision --index-url https://download.pytorch.org/whl/cu118
+   
+   # OU CUDA 12.1
+   pip install torch torchvision --index-url https://download.pytorch.org/whl/cu121
    ```
-   
-5. **Télécharger les modèles (automatique)**
-   
-   Les modèles seront téléchargés automatiquement lors de la première utilisation depuis GitHub. Ils seront sauvegardés dans le dossier `models/`.
 
-## 📖 Utilisation
+## 🚀 Utilisation
 
-### Restauration d'une image
+### Lancer l'application web
 
 ```bash
-python test_image.py
+python app.py
 ```
 
-Le script vous demandera de :
-1. Choisir un modèle (1-4)
-2. L'image sera restaurée automatiquement
+L'application sera accessible à :
+- **Interface web** : http://localhost:5000
+- **API** : http://localhost:5000/api/
 
-**Image d'entrée** : `data/input/`  
-**Image de sortie** : `data/output/`
+### Utilisation de l'interface web
 
-### Restauration d'une vidéo
+1. Ouvrez http://localhost:5000 dans votre navigateur
+2. Glissez-déposez ou sélectionnez une image
+3. Choisissez le modèle et le facteur d'échelle
+4. Cliquez sur "Restaurer l'image"
+5. Téléchargez le résultat
 
+## 📡 API REST
+
+### Endpoints disponibles
+
+#### `GET /api/health`
+Vérifier l'état de l'API et la disponibilité du GPU
+
+**Réponse :**
+```json
+{
+  "status": "ok",
+  "gpu_available": true,
+  "gpu_info": {
+    "name": "NVIDIA GeForce RTX 5060",
+    "memory": 16.0
+  },
+  "models": ["RealESRGAN_x4plus", ...]
+}
+```
+
+#### `GET /api/models`
+Obtenir la liste des modèles disponibles
+
+#### `POST /api/restore`
+Restaurer une image
+
+**Paramètres (multipart/form-data) :**
+- `image` (file) : Fichier image à restaurer
+- `model` (string, optionnel) : Nom du modèle (défaut: RealESRGAN_x4plus)
+- `outscale` (int, optionnel) : Facteur d'échelle (défaut: 4)
+
+**Réponse :**
+```json
+{
+  "success": true,
+  "job_id": "uuid",
+  "input_file": "filename",
+  "output_file": "filename",
+  "original_size": {"width": 1920, "height": 1080},
+  "restored_size": {"width": 7680, "height": 4320},
+  "model_used": "RealESRGAN_x4plus",
+  "scale": 4,
+  "download_url": "/api/download/filename",
+  "preview_url": "/api/preview/filename"
+}
+```
+
+#### `GET /api/download/<filename>`
+Télécharger une image restaurée
+
+#### `GET /api/preview/<filename>`
+Aperçu d'une image restaurée
+
+#### `GET /api/job/<job_id>`
+Obtenir le statut d'un job
+
+### Exemple d'utilisation de l'API
+
+#### Avec cURL
 ```bash
-python test_video.py
+curl -X POST http://localhost:5000/api/restore \
+  -F "image=@path/to/image.jpg" \
+  -F "model=RealESRGAN_x4plus" \
+  -F "outscale=4"
 ```
 
-Le script vous demandera de :
-1. Choisir une vidéo dans `data/input/`
-2. Choisir un modèle (1-4)
-3. La vidéo sera restaurée frame par frame
-
-**Vidéo d'entrée** : `data/input/`  
-**Vidéo de sortie** : `data/output/`
-
-### Comparaison d'images
-
-```bash
-python -m src.compare
-# ou
-python src/compare.py
-```
-
-Génère une comparaison visuelle avant/après et la sauvegarde dans `data/comparaison/`
-
-### Utilisation programmatique
-
+#### Avec Python
 ```python
-from src.restore import ImageRestorer
+import requests
 
-# Créer un restaurateur
-restorer = ImageRestorer(
-    model_name='RealESRGAN_x4plus_anime_6B',  # Modèle anime
-    gpu_id=0  # Utiliser GPU (None pour CPU)
-)
+url = "http://localhost:5000/api/restore"
+files = {'image': open('image.jpg', 'rb')}
+data = {'model': 'RealESRGAN_x4plus', 'outscale': 4}
 
-# Restaurer une image
-restorer.restore_image(
-    "data/input/image.jpg",
-    "data/output/image_restored.jpg",
-    outscale=4
-)
+response = requests.post(url, files=files, data=data)
+result = response.json()
 
-# Restaurer toutes les images d'un dossier
-restorer.restore_directory("data/input", "data/output")
-
-# Restaurer une vidéo
-restorer.restore_video("data/input/video.mp4", "data/output/video_restored.mp4")
+print(f"Image restaurée: {result['preview_url']}")
 ```
+
+#### Avec JavaScript (fetch)
+```javascript
+const formData = new FormData();
+formData.append('image', fileInput.files[0]);
+formData.append('model', 'RealESRGAN_x4plus');
+formData.append('outscale', 4);
+
+fetch('http://localhost:5000/api/restore', {
+    method: 'POST',
+    body: formData
+})
+.then(response => response.json())
+.then(data => {
+    console.log('Résultat:', data);
+    // Afficher l'image: data.preview_url
+});
+```
+
+## 🎯 Modèles disponibles
+
+1. **RealESRGAN_x4plus** : Modèle général pour photos et images réelles (x4)
+2. **RealESRGAN_x4plus_anime_6B** : Optimisé pour images anime/manga (x4)
+3. **RealESRNet_x4plus** : Version alternative ESRNet (x4)
+4. **RealESRGAN_x2plus** : Agrandissement x2 (plus rapide)
 
 ## 📁 Structure du projet
 
 ```
 restauration-image/
-├── data/                    # Dossier de données
-│   ├── input/              # Images/vidéos d'entrée
-│   ├── output/            # Images/vidéos restaurées
-│   ├── preprocessed/       # Images prétraitées (optionnel)
-│   └── comparaison/        # Résultats de comparaison
-│
-├── models/                 # Modèles pré-entraînés Real-ESRGAN
-│   ├── RealESRGAN_x4plus.pth
-│   ├── RealESRGAN_x4plus_anime_6B.pth
-│   ├── RealESRNet_x4plus.pth
-│   └── RealESRGAN_x2plus.pth
-│
-├── src/                    # Code source
-│   ├── restore.py         # Classe principale de restauration
-│   ├── compare.py         # Comparaison visuelle
-│   └── preprocess.py      # Prétraitement des images
-│
-├── basicsr_repo/          # Repository BasicSR (dépendance)
-│
-├── test_image.py          # Script de test pour images
-├── test_video.py          # Script de test pour vidéos
-├── main.py                # Évaluation et métriques
-├── requirements.txt   # Dépendances Python
-├── README.md              # Ce fichier
-└── pyrightconfig.json     # Configuration Pyright (optionnel)
+├── app.py                 # Serveur Flask principal
+├── templates/
+│   └── index.html         # Interface web
+├── static/
+│   ├── css/
+│   │   └── style.css      # Styles
+│   └── js/
+│       └── app.js         # JavaScript
+├── src/
+│   └── restore.py         # Module de restauration
+├── data/
+│   ├── uploads/           # Images uploadées
+│   └── output/            # Images restaurées
+├── models/                # Modèles pré-entraînés
+└── requirements.txt       # Dépendances
 ```
 
-## 🤖 Modèles disponibles
+## 🔧 Configuration
 
-Le projet supporte 4 modèles Real-ESRGAN :
+### Variables d'environnement (optionnel)
 
-1. **RealESRGAN_x4plus** (64 MB)
-   - Modèle général pour photos et images réelles
-   - Agrandissement : 4x
-   - Recommandé pour : photos, images naturelles
-
-2. **RealESRGAN_x4plus_anime_6B** (17 MB)
-   - Optimisé pour images anime/manga
-   - Agrandissement : 4x
-   - Recommandé pour : anime, manga, illustrations
-
-3. **RealESRNet_x4plus** (64 MB)
-   - Version alternative (ESRNet)
-   - Agrandissement : 4x
-   - Recommandé pour : alternative au modèle principal
-
-4. **RealESRGAN_x2plus** (64 MB)
-   - Agrandissement : 2x (plus rapide)
-   - Recommandé pour : traitement rapide, moins de mémoire
-
-## 💻 Exemples
-
-### Exemple 1 : Restaurer une photo
-
-```bash
-# Placer votre image dans data/input/
-python test_image.py
-# Choisir le modèle 1 (RealESRGAN_x4plus)
-# L'image restaurée sera dans data/output/
+Créez un fichier `.env` :
+```env
+FLASK_ENV=development
+FLASK_DEBUG=True
+MAX_UPLOAD_SIZE=52428800  # 50MB
 ```
 
-### Exemple 2 : Restaurer une image anime
+### Port personnalisé
 
-```bash
-python test_image.py
-# Choisir le modèle 2 (RealESRGAN_x4plus_anime_6B)
-```
-
-### Exemple 3 : Traitement par lot
-
+Modifiez la dernière ligne de `app.py` :
 ```python
-from src.restore import ImageRestorer
-
-restorer = ImageRestorer(model_name='RealESRGAN_x4plus')
-restorer.restore_directory("data/input", "data/output")
+app.run(debug=True, host='0.0.0.0', port=8080)  # Port 8080
 ```
-
-## 🔧 Dépendances
-
-Les principales dépendances sont listées dans `requirements.txt`. Principales bibliothèques :
-
-- **PyTorch** : Framework de deep learning
-- **OpenCV** : Traitement d'images
-- **Real-ESRGAN** : Modèles de restauration
-- **BasicSR** : Bibliothèque de super-résolution
-- **NumPy** : Calculs numériques
-- **Matplotlib** : Visualisation
-- **scikit-image** : Métriques d'évaluation
-
-Voir `requirements.txt` pour la liste complète.
-
-## ⚙️ Configuration
-
-### Utilisation du GPU
-
-Le projet détecte automatiquement les GPU NVIDIA (CUDA). Pour utiliser le GPU :
-
-1. Installer PyTorch avec support CUDA
-2. Le script utilisera automatiquement le GPU s'il est disponible
-
-**Note** : Les GPU Intel ne sont pas supportés (CUDA est exclusif à NVIDIA).
-
-### Gestion de la mémoire
-
-Si vous rencontrez des erreurs de mémoire :
-
-- Le script passe automatiquement en mode "tile" (traitement par morceaux)
-- Utilisez le modèle x2 (`RealESRGAN_x2plus`) pour économiser la mémoire
-- Réduisez la taille des images d'entrée
 
 ## 🐛 Dépannage
 
-### Erreur : "Aucun GPU détecté"
-- Normal si vous n'avez pas de GPU NVIDIA
-- Le traitement se fera sur CPU (plus lent mais fonctionnel)
+### GPU non détecté
 
-### Erreur : "Not enough memory"
-- Le script passe automatiquement en mode tile
-- Si cela persiste, utilisez le modèle x2 ou réduisez la taille des images
+1. Vérifiez que PyTorch avec CUDA est installé :
+   ```bash
+   python -c "import torch; print(torch.cuda.is_available())"
+   ```
 
-### Erreur : "Modèle non trouvé"
-- Les modèles sont téléchargés automatiquement lors de la première utilisation
-- Vérifiez votre connexion internet
-- Les modèles sont téléchargés depuis GitHub et sauvegardés dans `models/`
+2. Vérifiez les pilotes NVIDIA :
+   ```bash
+   nvidia-smi
+   ```
 
-## 📝 Notes
+3. Réinstallez PyTorch avec CUDA si nécessaire
 
-- Les modèles sont téléchargés automatiquement depuis GitHub lors de la première utilisation
-- Le traitement peut prendre du temps, surtout sur CPU
-- Les vidéos longues peuvent prendre plusieurs heures à traiter
-- Les résultats sont sauvegardés automatiquement
+### Erreur de mémoire GPU
 
-## 🤝 Contributions
+L'application basculera automatiquement en mode "tile" pour économiser la mémoire. Si le problème persiste, utilisez le modèle x2plus qui nécessite moins de mémoire.
 
-Les contributions sont les bienvenues ! N'hésitez pas à :
+## 📝 Licence
 
-1. Fork le projet
-2. Créer une branche pour votre fonctionnalité (`git checkout -b feature/AmazingFeature`)
-3. Commit vos changements (`git commit -m 'Add some AmazingFeature'`)
-4. Push vers la branche (`git push origin feature/AmazingFeature`)
-5. Ouvrir une Pull Request
+Ce projet utilise Real-ESRGAN qui est sous licence BSD.
 
-## 📄 Licence
+## 🤝 Contribution
 
-Ce projet utilise les modèles Real-ESRGAN qui sont sous licence BSD. 
-## 🙏 Remerciements
+Les contributions sont les bienvenues ! N'hésitez pas à ouvrir une issue ou une pull request.
 
-- [Real-ESRGAN](https://github.com/xinntao/Real-ESRGAN) - Modèles de restauration
-- [BasicSR](https://github.com/xinntao/BasicSR) - Bibliothèque de super-résolution
-- Tous les contributeurs open-source
+## 📧 Support
 
-## 📧 Contact
-
-Pour toute question ou suggestion, n'hésitez pas à ouvrir une issue sur GitHub.
-
-**Repository** : [https://github.com/moaddebian/restauration-image-Real-ESRGAN](https://github.com/moaddebian/restauration-image-Real-ESRGAN)
-
----
-
-⭐ Si ce projet vous est utile, n'hésitez pas à lui donner une étoile !
-
+Pour toute question ou problème, ouvrez une issue sur GitHub.

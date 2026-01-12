@@ -68,13 +68,47 @@ def main():
         print("\n" + "=" * 60)
         print("VÉRIFICATION DU GPU")
         print("=" * 60)
+        
+        # Vérifications détaillées du GPU
+        print(f"PyTorch version: {torch.__version__}")
+        print(f"CUDA disponible dans PyTorch: {torch.cuda.is_available()}")
+        
         if torch.cuda.is_available():
             gpu_id = 0  # Utiliser le premier GPU
-            print(f"GPU détecté: {torch.cuda.get_device_name(gpu_id)}")
-            print(f"Mémoire GPU disponible: {torch.cuda.get_device_properties(gpu_id).total_memory / 1024**3:.2f} GB")
+            device_name = torch.cuda.get_device_name(gpu_id)
+            device_props = torch.cuda.get_device_properties(gpu_id)
+            total_memory = device_props.total_memory / 1024**3
+            cuda_version = torch.version.cuda
+            print(f"✓ GPU détecté: {device_name}")
+            print(f"  ID du GPU: {gpu_id}")
+            print(f"  Mémoire GPU totale: {total_memory:.2f} GB")
+            print(f"  Version CUDA: {cuda_version}")
+            print(f"  Compute Capability: {device_props.major}.{device_props.minor}")
+            
+            # Vérifier la mémoire disponible
+            torch.cuda.empty_cache()
+            allocated = torch.cuda.memory_allocated(gpu_id) / 1024**3
+            reserved = torch.cuda.memory_reserved(gpu_id) / 1024**3
+            free = total_memory - reserved
+            print(f"  Mémoire libre: {free:.2f} GB")
+            
+            # Test rapide pour vérifier que le GPU fonctionne
+            try:
+                test_tensor = torch.randn(1, 1, 10, 10).cuda(gpu_id)
+                del test_tensor
+                torch.cuda.empty_cache()
+                print(f"✓ Test GPU réussi - Le GPU est opérationnel")
+            except Exception as e:
+                print(f"⚠️  Avertissement: Erreur lors du test GPU: {e}")
+                print("   Le traitement continuera mais pourrait être plus lent")
         else:
             gpu_id = None
-            print("Aucun GPU détecté, utilisation du CPU")
+            print("❌ Aucun GPU détecté")
+            print("   Raisons possibles:")
+            print("   - Pilotes NVIDIA non installés")
+            print("   - PyTorch compilé sans support CUDA")
+            print("   - GPU non compatible")
+            print("   → Utilisation du CPU (plus lent)")
         
         # Initialiser le restaurateur
         print("\n" + "=" * 60)

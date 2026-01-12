@@ -1,0 +1,17 @@
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+venv/
+env/
+.venv
+.git
+.gitignore
+frontend/
+node_modules/
+data/uploads/*
+data/output/*
+*.md
+.DS_Store
+.vscode/
+.idea/

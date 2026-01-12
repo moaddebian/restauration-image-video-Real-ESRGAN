@@ -4,28 +4,24 @@ __pycache__/
 *$py.class
 *.so
 .Python
-build/
-develop-eggs/
-dist/
-downloads/
-eggs/
-.eggs/
-lib/
-lib64/
-parts/
-sdist/
-var/
-wheels/
-*.egg-info/
-.installed.cfg
-*.egg
-
-# Environnements virtuels
 venv/
 env/
 ENV/
-env.bak/
-venv.bak/
+.venv
+
+# Flask
+instance/
+.webassets-cache
+
+# Images uploadées et résultats
+data/uploads/*
+data/output/*
+!data/uploads/.gitkeep
+!data/output/.gitkeep
+
+# Modèles (trop volumineux pour git)
+models/*.pth
+models/*.pkl
 
 # IDE
 .vscode/
@@ -33,44 +29,22 @@ venv.bak/
 *.swp
 *.swo
 *~
+
+# OS
 .DS_Store
+Thumbs.db
 
-# Modèles (trop volumineux pour Git)
-models/*.pth
-models/*.partial
-!models/.gitkeep
-
-# Données (optionnel - décommentez si vous ne voulez pas commit les données)
-# data/input/*
-# data/output/*
-# data/preprocessed/*
-# data/comparaison/*
-# !data/input/.gitkeep
-# !data/output/.gitkeep
-
-# Fichiers temporaires
-*.tmp
+# Logs
 *.log
-*.cache
 
-# Fichiers de comparaison générés
-comparison_result.png
-*.png.partial
+# Environment
+.env
+.env.local
 
-# Jupyter Notebook
+# Jupyter
 .ipynb_checkpoints
 
-# PyCharm
-.idea/
-
-# VS Code
-.vscode/
-
-# macOS
-.DS_Store
-
-# Windows
-Thumbs.db
-ehthumbs.db
-Desktop.ini
-
+# Testing
+.pytest_cache/
+.coverage
+htmlcov/

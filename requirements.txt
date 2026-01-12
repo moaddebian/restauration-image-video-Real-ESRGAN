@@ -20,6 +20,10 @@ scikit-learn>=1.3.0
 # Utilitaires
 tqdm>=4.66.0
 
+# Web Framework
+Flask>=3.0.0
+flask-cors>=4.0.0
+
 # Real-ESRGAN et BasicSR
 # Ces packages doivent être installés depuis les repositories GitHub
 

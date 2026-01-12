@@ -18,10 +18,55 @@ class ImageRestorer:
         Args:
             model_name: Nom du modèle ('RealESRGAN_x4plus', 'RealESRNet_x4plus', 
                        'RealESRGAN_x4plus_anime_6B', 'RealESRGAN_x2plus')
-            gpu_id: ID du GPU (None pour CPU)
+            gpu_id: ID du GPU (None = détection auto, 0+ = GPU spécifique, -1 = forcer CPU)
         """
         self.model_name = model_name
-        self.device = torch.device('cuda' if torch.cuda.is_available() and gpu_id is not None else 'cpu')
+        
+        # Détection automatique du GPU si gpu_id n'est pas spécifié
+        if gpu_id is None:
+            # Essayer de détecter automatiquement un GPU NVIDIA
+            if torch.cuda.is_available():
+                try:
+                    num_gpus = torch.cuda.device_count()
+                    if num_gpus > 0:
+                        gpu_id = 0  # Utiliser le premier GPU disponible
+                        gpu_name = torch.cuda.get_device_name(gpu_id)
+                        print(f"✓ GPU NVIDIA détecté: {gpu_name} (ID: {gpu_id})")
+                    else:
+                        gpu_id = None
+                        print("ℹ️  Aucun GPU détecté, utilisation du CPU")
+                except Exception as e:
+                    print(f"⚠️  Erreur lors de la détection GPU: {e}")
+                    print("   → Utilisation du CPU")
+                    gpu_id = None
+            else:
+                gpu_id = None
+                print("ℹ️  CUDA non disponible, utilisation du CPU")
+        elif gpu_id == -1:
+            # Forcer l'utilisation du CPU
+            gpu_id = None
+            print("ℹ️  Mode CPU forcé")
+        
+        # Définir le device
+        if gpu_id is not None and torch.cuda.is_available():
+            try:
+                # Vérifier que le GPU est accessible
+                torch.cuda.set_device(gpu_id)
+                test_tensor = torch.zeros(1).cuda(gpu_id)
+                del test_tensor
+                torch.cuda.empty_cache()
+                
+                self.device = torch.device(f'cuda:{gpu_id}')
+                self.gpu_id = gpu_id
+            except Exception as e:
+                print(f"⚠️  Erreur d'accès au GPU {gpu_id}: {e}")
+                print("   → Basculement vers CPU")
+                self.device = torch.device('cpu')
+                self.gpu_id = None
+        else:
+            self.device = torch.device('cpu')
+            self.gpu_id = None
+        
         self.upsampler = None
         self.model_path = None
         self.model = None
@@ -54,6 +99,9 @@ class ImageRestorer:
                           num_block=23, num_grow_ch=32, scale=4)
             self.netscale = 4
         
+        # Déplacer le modèle sur le device approprié
+        self.model = self.model.to(self.device)
+        
         # Télécharger le modèle s'il n'existe pas
         if not os.path.exists(self.model_path):
             os.makedirs('models', exist_ok=True)
@@ -70,6 +118,8 @@ class ImageRestorer:
                 raise ValueError(f"Modèle {self.model_name} non reconnu. Modèles disponibles: {list(model_urls.keys())}")
         
         # Initialiser l'upsampler
+        use_half = False if self.device.type == 'cpu' else True
+        
         self.upsampler = RealESRGANer(
             scale=self.netscale,
             model_path=self.model_path,
@@ -77,11 +127,29 @@ class ImageRestorer:
             tile=0,  # 0 = pas de tiling, augmenter si manque de mémoire
             tile_pad=10,
             pre_pad=0,
-            half=False if self.device == torch.device('cpu') else True,
+            half=use_half,
             device=self.device
         )
         
-        print(f"Modèle {self.model_name} chargé sur {self.device}")
+        # Vérifier que le modèle est bien sur le bon device
+        device_info = str(self.device)
+        if self.device.type == 'cuda':
+            device_info += f" ({torch.cuda.get_device_name(self.gpu_id)})"
+        
+        print(f"✓ Modèle {self.model_name} chargé sur {device_info}")
+        
+        # Vérification supplémentaire pour GPU
+        if self.device.type == 'cuda':
+            try:
+                # Vérifier que le modèle est bien sur GPU
+                if hasattr(self.model, 'parameters'):
+                    first_param = next(self.model.parameters())
+                    if first_param.device.type == 'cuda':
+                        print(f"✓ Modèle confirmé sur GPU {self.gpu_id}")
+                    else:
+                        print(f"⚠️  Attention: Le modèle semble être sur {first_param.device}, pas sur GPU")
+            except Exception as e:
+                print(f"⚠️  Impossible de vérifier l'emplacement du modèle: {e}")
     
     def restore_image(self, img_path, output_path=None, outscale=4):
         """
