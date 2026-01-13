@@ -20,8 +20,9 @@ COPY basicsr_repo/ ./basicsr_repo/
 RUN pip install --no-cache-dir -r requirements.txt
 RUN pip install -e basicsr_repo
 
-# Installer Real-ESRGAN depuis GitHub
-RUN pip install git+https://github.com/xinntao/Real-ESRGAN.git
+# Copier et exécuter le script d'installation de Real-ESRGAN
+COPY install_realesrgan.py .
+RUN python install_realesrgan.py
 
 # Copier le code de l'application
 COPY src/ ./src/
