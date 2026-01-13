@@ -62,8 +62,37 @@ try:
         if "Real-ESRGAN" in d:
             realesrgan_dir = os.path.join(temp_dir, d)
             print(f"Installation depuis: {realesrgan_dir}")
+            
+            # Corriger le setup.py avant l'installation
+            setup_py_path = os.path.join(realesrgan_dir, "setup.py")
+            if os.path.exists(setup_py_path):
+                print("Correction du setup.py...")
+                with open(setup_py_path, "r", encoding="utf-8") as f:
+                    setup_lines = f.readlines()
+                
+                # Chercher la version dans __init__.py
+                version = "0.0.0"
+                init_file = os.path.join(realesrgan_dir, "realesrgan", "__init__.py")
+                if os.path.exists(init_file):
+                    try:
+                        with open(init_file, "r", encoding="utf-8") as vf:
+                            import re
+                            match = re.search(r'__version__\s*=\s*["\']([^"\']+)["\']', vf.read())
+                            if match:
+                                version = match.group(1)
+                    except:
+                        pass
+                
+                # Ajouter __version__ au début du fichier si absent
+                if not any("__version__" in line for line in setup_lines[:20]):
+                    setup_lines.insert(0, f'__version__ = "{version}"\n')
+                    with open(setup_py_path, "w", encoding="utf-8") as f:
+                        f.writelines(setup_lines)
+                    print(f"✅ __version__ = '{version}' ajouté au setup.py")
+            
+            # Installer sans -e (installation normale)
             subprocess.run(
-                [sys.executable, "-m", "pip", "install", "-e", realesrgan_dir],
+                [sys.executable, "-m", "pip", "install", realesrgan_dir],
                 check=True
             )
             break
