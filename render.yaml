@@ -3,9 +3,27 @@ services:
     name: nostalix-ai-backend
     env: python
     buildCommand: |
+      echo "=== Répertoire de travail ===" &&
+      pwd &&
+      echo "=== Liste des fichiers ===" &&
+      ls -la &&
       pip install --upgrade pip setuptools wheel &&
       pip install -r requirements.txt &&
-      pip install -e basicsr_repo &&
+      echo "=== Vérification basicsr_repo ===" &&
+      if [ -d "basicsr_repo" ]; then
+        echo "✅ basicsr_repo trouvé, installation..." &&
+        pip install -e basicsr_repo
+      else
+        echo "⚠️ basicsr_repo non trouvé, recherche..." &&
+        BASICS_DIR=$(find . -type d -name "basicsr_repo" 2>/dev/null | head -1) &&
+        if [ -n "$BASICS_DIR" ]; then
+          echo "✅ Trouvé à: $BASICS_DIR" &&
+          pip install -e "$BASICS_DIR"
+        else
+          echo "⚠️ basicsr_repo non trouvé, installation depuis GitHub..." &&
+          pip install git+https://github.com/xinntao/BasicSR.git || exit 1
+        fi
+      fi &&
       echo "=== Installation Real-ESRGAN ===" &&
       (pip install git+https://github.com/xinntao/Real-ESRGAN.git 2>&1 || python setup_realesrgan.py) &&
       echo "=== Vérification ===" &&
