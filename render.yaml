@@ -6,10 +6,8 @@ services:
       pip install --upgrade pip setuptools wheel &&
       pip install -r requirements.txt &&
       pip install -e basicsr_repo &&
-      echo "=== Installation Real-ESRGAN ===" &&
-      python3 install_realesrgan.py 2>&1 &&
-      echo "=== Vérification finale ===" &&
-      python3 -c "import realesrgan; from realesrgan import RealESRGANer; print('✅ Real-ESRGAN installé et vérifié!')" &&
+      chmod +x install_realesrgan.sh 2>/dev/null || true &&
+      sh install_realesrgan.sh &&
       echo "=== Build terminé ==="
     startCommand: python app.py
     envVars:
