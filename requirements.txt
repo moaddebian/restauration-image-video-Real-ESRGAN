@@ -1,39 +1,56 @@
-# Dépendances principales pour le projet de restauration d'images
-# Python 3.8+ requis
-
+# ============================================
 # Deep Learning
+# ============================================
 torch>=2.0.0
 torchvision>=0.15.0
 
+# ============================================
 # Traitement d'images
+# ============================================
 opencv-python>=4.8.0
 Pillow>=10.0.0
 numpy>=1.24.0
 
-# Visualisation
+# ============================================
+# Visualisation et métriques
+# ============================================
 matplotlib>=3.7.0
-
-# Métriques et évaluation
 scikit-image>=0.21.0
 scikit-learn>=1.3.0
 
-# Utilitaires
-tqdm>=4.66.0
-
+# ============================================
 # Web Framework
+# ============================================
 Flask>=3.0.0
 flask-cors>=4.0.0
+gunicorn>=21.2.0 
 
-# Real-ESRGAN et BasicSR
-# Ces packages doivent être installés depuis les repositories GitHub
+# ============================================
+# Dépendances pour BasicSR (requises)
+# ============================================
+addict>=2.4.0
+future>=0.18.0
+lmdb>=1.4.0
+pyyaml>=6.0
+requests>=2.31.0
+scipy>=1.10.0
+tqdm>=4.66.0
 
+# ============================================
+# Utilitaires
+# ============================================
+werkzeug>=3.0.0 
+
+# ============================================
+# Packages à installer depuis GitHub
+# ============================================
+# BasicSR est déjà dans le projet (basicsr_repo/)
+# Installation: pip install -e basicsr_repo
 #
-# Installation de Real-ESRGAN:
-# git clone https://github.com/xinntao/Real-ESRGAN.git
-# cd Real-ESRGAN
-# pip install -e .
-# cd ..
+# Real-ESRGAN doit être installé séparément:
+# Option 1: pip install realesrgan (si disponible sur PyPI)
+# Option 2: git clone https://github.com/xinntao/Real-ESRGAN.git && pip install -e Real-ESRGAN
 #
-# Note: basicsr_repo est déjà dans le projet, vous pouvez installer depuis là:
+# Note: basicsr_repo est déjà dans le projet, installez-le avec:
 # pip install -e basicsr_repo
 
