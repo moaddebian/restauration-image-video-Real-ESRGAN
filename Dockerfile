@@ -2,13 +2,14 @@ FROM python:3.10-slim
 
 WORKDIR /app
 
-# Installer les dépendances système pour OpenCV
+# Installer les dépendances système pour OpenCV et Git
 RUN apt-get update && apt-get install -y \
     libgl1-mesa-glx \
     libglib2.0-0 \
     libsm6 \
     libxext6 \
     libxrender-dev \
+    git \
     && rm -rf /var/lib/apt/lists/*
 
 # Copier les fichiers de dépendances
@@ -18,6 +19,9 @@ COPY basicsr_repo/ ./basicsr_repo/
 # Installer les dépendances Python
 RUN pip install --no-cache-dir -r requirements.txt
 RUN pip install -e basicsr_repo
+
+# Installer Real-ESRGAN depuis GitHub
+RUN pip install git+https://github.com/xinntao/Real-ESRGAN.git
 
 # Copier le code de l'application
 COPY src/ ./src/

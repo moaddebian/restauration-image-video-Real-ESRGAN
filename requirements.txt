@@ -47,10 +47,9 @@ werkzeug>=3.0.0
 # BasicSR est déjà dans le projet (basicsr_repo/)
 # Installation: pip install -e basicsr_repo
 #
-# Real-ESRGAN doit être installé séparément:
-# Option 1: pip install realesrgan (si disponible sur PyPI)
-# Option 2: git clone https://github.com/xinntao/Real-ESRGAN.git && pip install -e Real-ESRGAN
-#
-# Note: basicsr_repo est déjà dans le projet, installez-le avec:
-# pip install -e basicsr_repo
+# Real-ESRGAN - Installation depuis GitHub
+# Note: pip install git+https://github.com/xinntao/Real-ESRGAN.git
+# Cette commande est exécutée dans render.yaml et Dockerfile
+# Si vous installez manuellement, exécutez:
+# pip install git+https://github.com/xinntao/Real-ESRGAN.git
 
