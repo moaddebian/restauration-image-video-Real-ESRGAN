@@ -1,7 +1,3 @@
-"""
-Script pour garder le service Render actif (évite la mise en veille)
-À exécuter sur un service externe (ex: UptimeRobot, cron-job.org)
-"""
 import requests
 import time
 import os
