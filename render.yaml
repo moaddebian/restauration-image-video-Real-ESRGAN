@@ -25,7 +25,7 @@ services:
         fi
       fi &&
       echo "=== Installation Real-ESRGAN ===" &&
-      (pip install git+https://github.com/xinntao/Real-ESRGAN.git 2>&1 || python setup_realesrgan.py) &&
+      python setup_realesrgan.py &&
       echo "=== Vérification ===" &&
       python -c "import realesrgan; from realesrgan import RealESRGANer; print('✅ Real-ESRGAN OK')" &&
       echo "=== Build terminé ==="

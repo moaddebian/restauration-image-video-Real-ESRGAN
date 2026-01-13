@@ -55,4 +55,5 @@ werkzeug>=3.0.0
 #
 # Real-ESRGAN sera installé via install_realesrgan.py pendant le build
 # Ce script gère automatiquement l'installation via git ou ZIP selon la disponibilité
+realesrgan==0.3.0
 
