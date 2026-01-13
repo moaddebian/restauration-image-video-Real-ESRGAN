@@ -7,36 +7,9 @@ services:
       pip install -r requirements.txt &&
       pip install -e basicsr_repo &&
       echo "=== Installation Real-ESRGAN ===" &&
-      python -c "
-      import subprocess, sys, urllib.request, zipfile, tempfile, shutil, os
-      print('Méthode 1: Installation via git...')
-      try:
-        subprocess.check_call([sys.executable, '-m', 'pip', 'install', 'git+https://github.com/xinntao/Real-ESRGAN.git'])
-        import realesrgan
-        from realesrgan import RealESRGANer
-        print('✅ Real-ESRGAN installé via git!')
-      except Exception as e:
-        print(f'Git échoué: {e}')
-        print('Méthode 2: Installation via ZIP...')
-        temp_dir = tempfile.mkdtemp()
-        zip_path = os.path.join(temp_dir, 'Real-ESRGAN.zip')
-        try:
-          urllib.request.urlretrieve('https://github.com/xinntao/Real-ESRGAN/archive/main.zip', zip_path)
-        except:
-          urllib.request.urlretrieve('https://github.com/xinntao/Real-ESRGAN/archive/master.zip', zip_path)
-        with zipfile.ZipFile(zip_path, 'r') as z:
-          z.extractall(temp_dir)
-        for d in os.listdir(temp_dir):
-          if 'Real-ESRGAN' in d:
-            subprocess.check_call([sys.executable, '-m', 'pip', 'install', '-e', os.path.join(temp_dir, d)])
-            break
-        shutil.rmtree(temp_dir)
-        import realesrgan
-        from realesrgan import RealESRGANer
-        print('✅ Real-ESRGAN installé via ZIP!')
-      " &&
-      echo "=== Vérification finale ===" &&
-      python -c "import realesrgan; from realesrgan import RealESRGANer; print('✅ Real-ESRGAN vérifié!')" &&
+      python setup_realesrgan.py &&
+      echo "=== Vérification ===" &&
+      python -c "import realesrgan; from realesrgan import RealESRGANer; print('✅ Real-ESRGAN OK')" &&
       echo "=== Build terminé ==="
     startCommand: python app.py
     envVars:
