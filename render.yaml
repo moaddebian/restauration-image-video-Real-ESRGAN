@@ -7,7 +7,7 @@ services:
       pip install -r requirements.txt &&
       pip install -e basicsr_repo &&
       echo "=== Installation Real-ESRGAN ===" &&
-      python setup_realesrgan.py &&
+      (pip install git+https://github.com/xinntao/Real-ESRGAN.git 2>&1 || python setup_realesrgan.py) &&
       echo "=== Vérification ===" &&
       python -c "import realesrgan; from realesrgan import RealESRGANer; print('✅ Real-ESRGAN OK')" &&
       echo "=== Build terminé ==="
